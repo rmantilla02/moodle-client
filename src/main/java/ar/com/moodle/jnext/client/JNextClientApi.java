@@ -21,6 +21,6 @@ public interface JNextClientApi {
 	 * @return los legajos segun empresaId
 	 * @throws ExternalApiException
 	 */
-	public List<LegajoData> getLegajosCertificadoIS(Integer empresaId) throws ExternalApiException;
+	public List<LegajoData> getLegajosWithcertificateIS(Integer empresaId) throws ExternalApiException;
 
 }

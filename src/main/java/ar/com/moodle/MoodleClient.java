@@ -21,7 +21,6 @@ public class MoodleClient {
 			logger.info("Iniciando proceso para crear los usuarios en la plataforma de Moodle...");
 
 			String filePath = Configuration.get("users.file.path.main");
-//			String filePath = Configuration.get("users.file.path.test");
 			List<UserData> users = CSVParser.parseUsers(filePath);
 
 			MoodleClientApi moodleCliet = new MoodleClientApiImpl();
@@ -31,7 +30,7 @@ public class MoodleClient {
 			for (UserData user : users) {
 				try {
 					CohortData cohortExist = getCohortIfExist(allCohorts, user.getSectorJn(), user.getCentroDeCostos());
-					if (cohortExist == null) { // crear la cohort
+					if (cohortExist == null) { // crear cohort
 
 						cohortExist = moodleCliet.createCohort(user.getSectorJn(), user.getCentroDeCostos());
 						if (cohortExist == null) {
@@ -65,7 +64,7 @@ public class MoodleClient {
 				.orElse(null);
 
 		if (result != null) {
-			logger.info("cohorte id: " + result.getId() + ", nombre: " + result.getName());
+			logger.info("existe cohort con id: " + result.getId() + ", nombre: " + result.getName());
 		}
 		return result;
 	}

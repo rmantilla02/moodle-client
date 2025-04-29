@@ -31,15 +31,17 @@ import ar.com.moodle.model.LegajoData;
 public class JNextClientApiImpl implements JNextClientApi {
 
 	private final String JNEXT_BASE_URL = "https://www.cloudpayroll.com.ar";
-	private final String FUNCTION_GT_LEGAJOS = "//apiint/gtLegajos";
+	private final String FUNCTION_LEGAJOS_CERT_GT = "//apiint/gtLegajos";
 
-	private final String FUNCTION_IS_LEGAJOS_SELBUS = "//apiint/Legajos";
+	private final String FUNCTION_LEGAJOS_CERT_IS = "//apiint/Legajos";
+	private final String FUNCTION_LEGAJOS_IADT_CERT_IS = "//apiint/LegajosSelBusIADT";
 
 	private static final Logger logger = LogManager.getLogger(JNextClientApiImpl.class);
 
 	@Override
 	public List<LegajoData> getGTLegajosByEmpresaId(Integer empresaId) throws ExternalApiException {
-		StringBuilder respuesta = new StringBuilder();
+		StringBuilder response = new StringBuilder();
+		List<LegajoData> result = null;
 		try {
 			logger.info("consultando los legajos de la empresaId: " + empresaId);
 
@@ -49,8 +51,8 @@ public class JNextClientApiImpl implements JNextClientApi {
 			SSLContext sslContext = this.buildSSLContext(cert_gt_file_path, cert_gt_pass);
 			HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
 
-			URL url = new URL(
-					JNEXT_BASE_URL + FUNCTION_GT_LEGAJOS + "?EmpresaID=" + empresaId + "&LastSync=1990-01-01T12:00:00");
+			URL url = new URL(JNEXT_BASE_URL + FUNCTION_LEGAJOS_CERT_GT + "?EmpresaID=" + empresaId
+					+ "&LastSync=1990-01-01T12:00:00");
 			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 
@@ -61,28 +63,27 @@ public class JNextClientApiImpl implements JNextClientApi {
 				String inputLine;
 
 				while ((inputLine = in.readLine()) != null) {
-					respuesta.append(inputLine);
+					response.append(inputLine);
 				}
 			}
-			String resultAux = respuesta.toString();
-			System.out.println("response: " + resultAux);
 
 			Gson gson = new Gson();
-			List<LegajoData> resultLejagos = gson.fromJson(resultAux, new TypeToken<List<LegajoData>>() {
+			result = gson.fromJson(response.toString(), new TypeToken<List<LegajoData>>() {
 			}.getType());
-			return resultLejagos;
+			return result;
 		} catch (IOException ioe) {
 			logger.error("Error de comunicación con el servicio externo. " + ioe.getMessage(), ioe);
 			throw new ExternalApiException("Error de comunicación con el servicio: " + ioe.getMessage(), ioe);
 		} catch (Exception ex) {
-			logger.error("Error inesperado al consultar los legajos.", ex.getCause());
+			logger.error("Error inesperado al consultar los legajos.", ex);
 			throw new ExternalApiException("Error inesperado al consultar los legajos.", ex);
 		}
 	}
 
 	@Override
-	public List<LegajoData> getLegajosCertificadoIS(Integer empresaId) throws ExternalApiException {
-		StringBuilder respuesta = new StringBuilder();
+	public List<LegajoData> getLegajosWithcertificateIS(Integer empresaId) throws ExternalApiException {
+		StringBuilder response = new StringBuilder();
+		List<LegajoData> result = null;
 		try {
 			String cert_is_file_path = Configuration.get("jnext.cert.is.file.path");
 			String cert_is_pass = Configuration.get("jnext.cert.is.password");
@@ -90,7 +91,7 @@ public class JNextClientApiImpl implements JNextClientApi {
 			SSLContext sslContext = this.buildSSLContext(cert_is_file_path, cert_is_pass);
 			HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
 
-			URL url = new URL(JNEXT_BASE_URL + FUNCTION_IS_LEGAJOS_SELBUS + "?Empresa_ID=" + empresaId);
+			URL url = new URL(JNEXT_BASE_URL + FUNCTION_LEGAJOS_IADT_CERT_IS + "?Empresa_ID=" + empresaId);
 			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 
@@ -101,22 +102,21 @@ public class JNextClientApiImpl implements JNextClientApi {
 				String inputLine;
 
 				while ((inputLine = in.readLine()) != null) {
-					respuesta.append(inputLine);
+					response.append(inputLine);
 				}
 			}
 
-			String resultAux = respuesta.toString();
-			System.out.println("Código de respuesta: " + resultAux);
+//			System.out.println("Código de respuesta: " + response.toString());
 
 			Gson gson = new Gson();
-			List<LegajoData> resultLejagos = gson.fromJson(resultAux, new TypeToken<List<LegajoData>>() {
+			result = gson.fromJson(response.toString(), new TypeToken<List<LegajoData>>() {
 			}.getType());
-			return resultLejagos;
+			return result;
 		} catch (IOException ioe) {
 			logger.error("Error de comunicación con el servicio externo. " + ioe.getMessage(), ioe);
 			throw new ExternalApiException("Error de comunicación con el servicio: " + ioe.getMessage(), ioe);
 		} catch (Exception ex) {
-			logger.error("Error inesperado al consultar los legajos.", ex.getCause());
+			logger.error("Error inesperado al consultar los legajos.", ex);
 			throw new ExternalApiException("Error inesperado al consultar los legajos.", ex);
 		}
 	}
@@ -142,7 +142,7 @@ public class JNextClientApiImpl implements JNextClientApi {
 			sslContext.init(keyManagers, trustManagers, null);
 			return sslContext;
 		} catch (Exception e) {
-
+			logger.error("Error al crear sslContext.", e);
 			throw new BusinessException("Error al crear sslContext");
 		}
 	}

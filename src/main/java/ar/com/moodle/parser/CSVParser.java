@@ -55,7 +55,7 @@ public class CSVParser {
 				user.setFirstname(valores[2]);
 				user.setLastname(valores[3]);
 				user.setEmail(valores[4]);
-				validateEmail(lineaNum, KEY_EMAIL, user.getEmail());
+				validateEmail(lineaNum, user.getUsername(), user.getEmail());
 				user.setDni(valores[5]);
 				validateValueNumeric(lineaNum, KEY_DNI, user.getDni());
 				user.setLegajoId(valores[6]);
@@ -108,10 +108,16 @@ public class CSVParser {
 					"error en el registro " + linea + " de la columna " + key + ". valor: " + value);
 	}
 
-	private static void validateEmail(int linea, String key, String value) throws ParserValueException {
-		if (value == null || value.isEmpty() || !value.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$"))
-			throw new ParserValueException(
-					"error en el registro " + linea + " de la columna " + key + ". valor: " + value);
+	private static void validateEmail(int linea, String username, String value) throws ParserValueException {
+		if (value != null && !value.isEmpty()) {
+			if (!value.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+				throw new ParserValueException(
+						"error de email en el registro " + linea + ". username: " + username + ", valor: " + value);
+			}
+		} else {
+			logger.warn("el usuario " + username + " de la linea: " + linea + " no tiene email.");
+		}
+
 	}
 
 }

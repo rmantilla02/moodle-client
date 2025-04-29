@@ -9,16 +9,31 @@ public class LegajoData {
 
 	@SerializedName("Legajo_ID")
 	String legajoId;
+
 	@SerializedName("Nombre")
 	String nombre;
+
 	@SerializedName("Apellido")
 	String apellido;
-	@SerializedName("Sector")
+
+	@SerializedName("Sectores_Descripcion")
 	String sector;
-	@SerializedName("CCosto")
+
+	@SerializedName("CentroDeCostos_Descripcion")
 	String centroDeCostos;
-	@SerializedName("Puesto")
+
+	@SerializedName("Puestos_Descripcion")
 	String puesto;
+
+	@SerializedName("Email")
+	String email;
+
+	@SerializedName("NroDocumento")
+	String nroDocumento;
+
+	@SerializedName("TiposDeDocumentos_Descripcion")
+	String docDescripcion;
+
 	@SerializedName("FechaIngreso")
 	String fechaIngreso;
 
