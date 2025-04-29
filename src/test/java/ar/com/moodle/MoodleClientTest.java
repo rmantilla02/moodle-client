@@ -1,10 +1,11 @@
 package ar.com.moodle;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import ar.com.moodle.client.MoodleClientApi;
 import ar.com.moodle.client.impl.MoodleClientApiImpl;
@@ -80,7 +81,7 @@ public class MoodleClientTest {
 		}
 		System.out.println("Cantidad de usuarios: " + result.size());
 
-		assertNotNull("resultado null", result);
+		Assertions.assertNotNull(result, "resultado null");
 	}
 
 	@Test
@@ -94,7 +95,7 @@ public class MoodleClientTest {
 			moodleClient.createUser(user);
 		}
 
-		assertNotNull("resultado null", users);
+		assertNotNull(users, "resultado null");
 	}
 
 	@Test
@@ -113,7 +114,7 @@ public class MoodleClientTest {
 		List<CohortData> result;
 		result = client.getAllCohortes();
 
-		assertNotNull("resultado null", result);
+		assertNotNull(result, "resultado null");
 	}
 
 	@Test

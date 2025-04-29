@@ -6,7 +6,7 @@
 	<artifactId>moodle-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>moodle-client</name>
-	<description>cliente con la plataforma de moodle</description>
+	<description>Cliente para invocar a las funciones de la plataforma Moodle</description>
 
 	<dependencies>
 		<dependency>
@@ -20,22 +20,22 @@
 			<artifactId>log4j-api</artifactId>
 			<version>2.20.0</version>
 		</dependency>
-
-		<!-- Implementación -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.20.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.10.1</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.10.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
 
 </project>
