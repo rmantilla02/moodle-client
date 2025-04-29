@@ -1,0 +1,10 @@
+# Archivos de compilación
+/target/
+
+# Configuración de IDEs
+*.classpath
+*.project
+*.settings/
+
+# Archivos de log
+*.log
