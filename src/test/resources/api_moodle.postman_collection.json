@@ -1,0 +1,458 @@
+{
+	"info": {
+		"_postman_id": "32e416b3-af76-4265-b3df-2ac0cb35a7b5",
+		"name": "api_moodle",
+		"description": "Servicios de Moodle para crear los usuarios, cohortes y asignarlos a los cursos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23560763"
+	},
+	"item": [
+		{
+			"name": "get_legajos_CERT_IS",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.cloudpayroll.com.ar/apiint/gtLegajos?EmpresaID=6201&LastSync=1990-01-01T12:00:00",
+					"protocol": "https",
+					"host": [
+						"www",
+						"cloudpayroll",
+						"com",
+						"ar"
+					],
+					"path": [
+						"apiint",
+						"gtLegajos"
+					],
+					"query": [
+						{
+							"key": "EmpresaID",
+							"value": "6201"
+						},
+						{
+							"key": "LastSync",
+							"value": "1990-01-01T12:00:00"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_cohortes",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://campus.miscapacitaciones.com.ar/webservice/rest/server.php?wstoken=12e71446cc9008a70c9e5a5362d7fdcd&moodlewsrestformat=json&wsfunction=core_cohort_get_cohorts",
+					"protocol": "https",
+					"host": [
+						"campus",
+						"miscapacitaciones",
+						"com",
+						"ar"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "wstoken",
+							"value": "12e71446cc9008a70c9e5a5362d7fdcd"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						},
+						{
+							"key": "wsfunction",
+							"value": "core_cohort_get_cohorts"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create_cohort",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "cohorts[0][name]",
+							"value": "At. al PacientePrueba-OperacionesPrueba",
+							"type": "text"
+						},
+						{
+							"key": "cohorts[0][idnumber]",
+							"value": "At. al PacientePrueba-OperacionesPrueba",
+							"type": "text"
+						},
+						{
+							"key": "cohorts[0][description]",
+							"value": "rmantilla - prueba",
+							"type": "text"
+						},
+						{
+							"key": "cohorts[0][descriptionformat]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "cohorts[0][categorytype][type]",
+							"value": "system",
+							"type": "text"
+						},
+						{
+							"key": "cohorts[0][categorytype][value]",
+							"value": "system",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://campus.miscapacitaciones.com.ar/webservice/rest/server.php?wstoken=12e71446cc9008a70c9e5a5362d7fdcd&moodlewsrestformat=json&wsfunction=core_cohort_create_cohorts",
+					"protocol": "https",
+					"host": [
+						"campus",
+						"miscapacitaciones",
+						"com",
+						"ar"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "wstoken",
+							"value": "12e71446cc9008a70c9e5a5362d7fdcd"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						},
+						{
+							"key": "wsfunction",
+							"value": "core_cohort_create_cohorts"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cohort_add_members",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "members[0][cohorttype][type]",
+							"value": "idnumber",
+							"type": "text"
+						},
+						{
+							"key": "members[0][cohorttype][value]",
+							"value": "At. al PacientePrueba-OperacionesPrueba",
+							"type": "text"
+						},
+						{
+							"key": "members[0][usertype][type]",
+							"value": "username",
+							"type": "text"
+						},
+						{
+							"key": "members[0][usertype][value]",
+							"value": "11222333",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://campus.miscapacitaciones.com.ar/webservice/rest/server.php?wstoken=12e71446cc9008a70c9e5a5362d7fdcd&moodlewsrestformat=json&wsfunction=core_cohort_add_cohort_members",
+					"protocol": "https",
+					"host": [
+						"campus",
+						"miscapacitaciones",
+						"com",
+						"ar"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "wstoken",
+							"value": "12e71446cc9008a70c9e5a5362d7fdcd"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						},
+						{
+							"key": "wsfunction",
+							"value": "core_cohort_add_cohort_members"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create_user",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "wstoken",
+							"value": "12e71446cc9008a70c9e5a5362d7fdcd",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "wsfunction",
+							"value": "core_user_create_users",
+							"type": "text"
+						},
+						{
+							"key": "users[0][username]",
+							"value": "userprueba",
+							"type": "text"
+						},
+						{
+							"key": "users[0][firstname]",
+							"value": "user",
+							"type": "text"
+						},
+						{
+							"key": "users[0][lastname]",
+							"value": "prueba",
+							"type": "text"
+						},
+						{
+							"key": "users[0][fullname]",
+							"value": "user prueba",
+							"type": "text"
+						},
+						{
+							"key": "users[0][email]",
+							"value": "rmantilla@fi.uba.ar",
+							"type": "text"
+						},
+						{
+							"key": "users[0][department]",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "users[0][auth]",
+							"value": "manual",
+							"type": "text"
+						},
+						{
+							"key": "users[0][lang]",
+							"value": "es",
+							"type": "text"
+						},
+						{
+							"key": "users[0][country]",
+							"value": "AR",
+							"type": "text"
+						},
+						{
+							"key": "users[0][password]",
+							"value": "user.321",
+							"type": "text"
+						},
+						{
+							"key": "users[0][createpassword]",
+							"value": "0",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://campus.miscapacitaciones.com.ar/webservice/rest/server.php?wstoken=12e71446cc9008a70c9e5a5362d7fdcd&moodlewsrestformat=json&wsfunction=core_user_create_users",
+					"protocol": "https",
+					"host": [
+						"campus",
+						"miscapacitaciones",
+						"com",
+						"ar"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					],
+					"query": [
+						{
+							"key": "wstoken",
+							"value": "12e71446cc9008a70c9e5a5362d7fdcd"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json"
+						},
+						{
+							"key": "wsfunction",
+							"value": "core_user_create_users"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "enrol_users",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "wstoken",
+							"value": "12e71446cc9008a70c9e5a5362d7fdcd",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "wsfunction",
+							"value": "enrol_manual_enrol_users",
+							"type": "text"
+						},
+						{
+							"key": "enrolments[0][roleid]",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "enrolments[0][userid]\t",
+							"value": "123",
+							"type": "text"
+						},
+						{
+							"key": "enrolments[0][courseid]\t",
+							"value": "425",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://campus.miscapacitaciones.com.ar/webservice/rest/server.php",
+					"protocol": "https",
+					"host": [
+						"campus",
+						"miscapacitaciones",
+						"com",
+						"ar"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unenrol_users",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "wstoken",
+							"value": "12e71446cc9008a70c9e5a5362d7fdcd",
+							"type": "text"
+						},
+						{
+							"key": "moodlewsrestformat",
+							"value": "json",
+							"type": "text"
+						},
+						{
+							"key": "wsfunction",
+							"value": "enrol_manual_unenrol_users",
+							"type": "text"
+						},
+						{
+							"key": "enrolments[0][userid]",
+							"value": "932",
+							"type": "text"
+						},
+						{
+							"key": "enrolments[0][courseid]\t",
+							"value": "105",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://campus.miscapacitaciones.com.ar/webservice/rest/server.php",
+					"protocol": "https",
+					"host": [
+						"campus",
+						"miscapacitaciones",
+						"com",
+						"ar"
+					],
+					"path": [
+						"webservice",
+						"rest",
+						"server.php"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
