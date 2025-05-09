@@ -8,11 +8,26 @@
 	<name>moodle-client</name>
 	<description>Cliente para invocar a las funciones de la plataforma Moodle</description>
 
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.14</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>6.2.2</version>
 		</dependency>
 		<!-- API principal -->
 		<dependency>

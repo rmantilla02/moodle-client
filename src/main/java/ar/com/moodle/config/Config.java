@@ -3,12 +3,12 @@ package ar.com.moodle.config;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class Configuration {
+public class Config {
 
 	private static final Properties props = new Properties();
 
 	static {
-		try (InputStream input = Configuration.class.getClassLoader().getResourceAsStream("config.properties")) {
+		try (InputStream input = Config.class.getClassLoader().getResourceAsStream("config.properties")) {
 			if (input == null) {
 				throw new RuntimeException("No se pudo encontrar el archivo config.properties");
 			}

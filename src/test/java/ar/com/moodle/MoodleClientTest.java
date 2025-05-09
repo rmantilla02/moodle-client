@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import ar.com.moodle.client.MoodleClientApi;
 import ar.com.moodle.client.impl.MoodleClientApiImpl;
-import ar.com.moodle.config.Configuration;
+import ar.com.moodle.config.Config;
 import ar.com.moodle.exception.CSVParserException;
 import ar.com.moodle.exception.ExternalApiException;
 import ar.com.moodle.model.CohortData;
@@ -69,7 +69,7 @@ public class MoodleClientTest {
 	public void testParsearUsuarios() {
 
 		List<UserData> result = null;
-		String path = Configuration.get("users.file.path.test");
+		String path = Config.get("users.file.path.test");
 
 		try {
 			result = CSVParser.parseUsers(path);
@@ -86,7 +86,7 @@ public class MoodleClientTest {
 
 		MoodleClientApi moodleClient = new MoodleClientApiImpl();
 		List<UserData> users = null;
-		String path = Configuration.get("users.file.path.test");
+		String path = Config.get("users.file.path.test");
 		users = CSVParser.parseUsers(path);
 		for (UserData user : users) {
 			moodleClient.createUser(user);

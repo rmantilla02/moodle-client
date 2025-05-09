@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import ar.com.moodle.config.Configuration;
+import ar.com.moodle.config.Config;
 import ar.com.moodle.exception.BusinessException;
 import ar.com.moodle.exception.ExternalApiException;
 import ar.com.moodle.model.LegajoData;
@@ -31,6 +31,7 @@ import ar.com.moodle.model.LegajoData;
 public class JNextClientApiImpl implements JNextClientApi {
 
 	private final String JNEXT_BASE_URL = "https://www.cloudpayroll.com.ar";
+//	private final String JNEXT_BASE_URL = "https:localhost:3000";
 	private final String FUNCTION_LEGAJOS_CERT_GT = "//apiint/gtLegajos";
 
 	private final String FUNCTION_LEGAJOS_CERT_IS = "//apiint/Legajos";
@@ -39,14 +40,14 @@ public class JNextClientApiImpl implements JNextClientApi {
 	private static final Logger logger = LogManager.getLogger(JNextClientApiImpl.class);
 
 	@Override
-	public List<LegajoData> getGTLegajosByEmpresaId(Integer empresaId) throws ExternalApiException {
+	public List<LegajoData> getLegajosWithCertificateGT(Integer empresaId) throws ExternalApiException {
 		StringBuilder response = new StringBuilder();
 		List<LegajoData> result = null;
 		try {
 			logger.info("consultando los legajos de la empresaId: " + empresaId);
 
-			String cert_gt_file_path = Configuration.get("jnext.cert.gt.file.path");
-			String cert_gt_pass = Configuration.get("jnext.cert.gt.password");
+			String cert_gt_file_path = Config.get("jnext.cert.gt.file.path");
+			String cert_gt_pass = Config.get("jnext.cert.gt.password");
 
 			SSLContext sslContext = this.buildSSLContext(cert_gt_file_path, cert_gt_pass);
 			HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
@@ -85,8 +86,8 @@ public class JNextClientApiImpl implements JNextClientApi {
 		StringBuilder response = new StringBuilder();
 		List<LegajoData> result = null;
 		try {
-			String cert_is_file_path = Configuration.get("jnext.cert.is.file.path");
-			String cert_is_pass = Configuration.get("jnext.cert.is.password");
+			String cert_is_file_path = Config.get("jnext.cert.is.file.path");
+			String cert_is_pass = Config.get("jnext.cert.is.password");
 
 			SSLContext sslContext = this.buildSSLContext(cert_is_file_path, cert_is_pass);
 			HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
@@ -105,13 +106,12 @@ public class JNextClientApiImpl implements JNextClientApi {
 					response.append(inputLine);
 				}
 			}
-
-//			System.out.println("Código de respuesta: " + response.toString());
-
+//			System.out.println("response: " + response.toString());
 			Gson gson = new Gson();
 			result = gson.fromJson(response.toString(), new TypeToken<List<LegajoData>>() {
 			}.getType());
 			return result;
+
 		} catch (IOException ioe) {
 			logger.error("Error de comunicación con el servicio externo. " + ioe.getMessage(), ioe);
 			throw new ExternalApiException("Error de comunicación con el servicio: " + ioe.getMessage(), ioe);

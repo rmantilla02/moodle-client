@@ -13,7 +13,7 @@ public interface JNextClientApi {
 	 * @return los legajos segun empresaId
 	 * @throws ExternalApiException
 	 */
-	public List<LegajoData> getGTLegajosByEmpresaId(Integer empresaId) throws ExternalApiException;
+	public List<LegajoData> getLegajosWithCertificateGT(Integer empresaId) throws ExternalApiException;
 
 	/**
 	 * 

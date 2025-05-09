@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import ar.com.moodle.client.MoodleClientApi;
-import ar.com.moodle.config.Configuration;
+import ar.com.moodle.config.Config;
 import ar.com.moodle.exception.BusinessException;
 import ar.com.moodle.exception.ExternalApiException;
 import ar.com.moodle.model.CohortData;
@@ -39,7 +39,7 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 	public Integer createUser(UserData user) throws ExternalApiException {
 		try {
 			logger.info("Dando de alta el usuario: " + user.getUsername());
-			String token = Configuration.get("moodle.token");
+			String token = Config.get("moodle.token");
 
 			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_USER_CREATE_USERS
 					+ "&moodlewsrestformat=json";
@@ -73,7 +73,7 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 		CohortData result = null;
 		try {
 			logger.info("Creando cohort... " + sectorJn + "-" + centroDeCostos);
-			String token = Configuration.get("moodle.token");
+			String token = Config.get("moodle.token");
 
 			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_COHORT_CREATE_COHORTS
 					+ "&moodlewsrestformat=json";
@@ -168,7 +168,7 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 		String result;
 		try {
 			logger.info("Consultando los cursos... ");
-			String token = Configuration.get("moodle.token");
+			String token = Config.get("moodle.token");
 
 			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_COURSE_GET_COURSES
 					+ "&moodlewsrestformat=json";
@@ -193,7 +193,7 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 	public List<CohortData> getAllCohortes() throws ExternalApiException {
 		try {
 			logger.info("invocando al servicio core_cohort_get_cohorts...");
-			String token = Configuration.get("moodle.token");
+			String token = Config.get("moodle.token");
 
 			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_COHORT_GET_COHORTS
 					+ "&moodlewsrestformat=json";
@@ -224,7 +224,7 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 	public Integer cohortAddMember(String idnumberCohort, String username) throws ExternalApiException {
 		try {
 			logger.info("agregando el usuario " + username + " al cohort " + idnumberCohort);
-			String token = Configuration.get("moodle.token");
+			String token = Config.get("moodle.token");
 
 			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_COHORT_ADD_COHORT_MEMBERS
 					+ "&moodlewsrestformat=json";

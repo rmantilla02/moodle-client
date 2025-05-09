@@ -12,6 +12,7 @@ public class UserData {
 	String puesto;
 	String centroDeCostos;
 	String legajoId;
+	String fechaIngreso;
 
 	public String getUsername() {
 		return username;
@@ -95,6 +96,28 @@ public class UserData {
 
 	public String getCohort() {
 		return sectorJn + "-" + centroDeCostos;
+	}
+
+	public String getFechaIngreso() {
+		return fechaIngreso;
+	}
+
+	public void setFechaIngreso(String fechaIngreso) {
+		this.fechaIngreso = fechaIngreso;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("username: " + username + ", ");
+		sb.append("firstname: " + firstname + ", ");
+		sb.append("lastname: " + lastname + ", ");
+		sb.append("email: " + email + ", ");
+		sb.append("sectorJn: " + sectorJn + ", ");
+		sb.append("centroDeCostos: " + centroDeCostos);
+
+		return sb.toString();
+
 	}
 
 }
