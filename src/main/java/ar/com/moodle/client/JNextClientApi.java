@@ -1,4 +1,4 @@
-package ar.com.moodle.jnext.client;
+package ar.com.moodle.client;
 
 import java.util.List;
 

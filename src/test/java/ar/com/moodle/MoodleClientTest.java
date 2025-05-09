@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import ar.com.moodle.client.MoodleClientApi;
 import ar.com.moodle.client.impl.MoodleClientApiImpl;
 import ar.com.moodle.config.Config;
-import ar.com.moodle.exception.CSVParserException;
 import ar.com.moodle.exception.ExternalApiException;
 import ar.com.moodle.model.CohortData;
 import ar.com.moodle.model.UserData;
@@ -19,70 +18,56 @@ import ar.com.moodle.parser.CSVParser;
 public class MoodleClientTest {
 
 	@Test
-	public void testCreateUser() {
+	public void testCreateUserOk() throws Exception {
 		MoodleClientApi client = new MoodleClientApiImpl();
 
-		try {
-			String dni = "11222333";
-			String sectorJn = "At. al PacientePrueba";
-			String centroDeCostos = "OperacionesPrueba";
+		String dni = "11222333";
+		String sectorJn = "At. al PacientePrueba";
+		String centroDeCostos = "OperacionesPrueba";
 
-			UserData user = new UserData();
-			user.setUsername(dni);
-			user.setPassword(dni);
-			user.setFirstname("Roger");
-			user.setLastname("Prueba");
-			user.setEmail("RMANTILLA02@GMAIL.COM");
-			user.setDni(dni);
-			user.setLegajoId("163173");
-			user.setSectorJn(sectorJn);
-			user.setCentroDeCostos(centroDeCostos);
-			user.setPuesto("Tecnico/a");
+		UserData user = new UserData();
+		user.setUsername(dni);
+		user.setPassword(dni);
+		user.setFirstname("Roger");
+		user.setLastname("Prueba");
+		user.setEmail("RMANTILLA02@GMAIL.COM");
+		user.setDni(dni);
+		user.setLegajoId("163173");
+		user.setSectorJn(sectorJn);
+		user.setCentroDeCostos(centroDeCostos);
+		user.setPuesto("Tecnico/a");
 
-			Integer result = client.createUser(user);
-			assertNotNull(result);
-		} catch (Exception e) {
-			assertNotNull(null);
-		}
+		Integer result = client.createUser(user);
+		assertNotNull(result);
+	}
+
+	@Test
+	public void testCreateCohort() throws Exception {
+		MoodleClientApi client = new MoodleClientApiImpl();
+
+		String sectorJn = "At. al PacientePrueba2";
+		String centroDeCostos = "OperacionesPrueba2";
+
+		CohortData createResult = client.createCohort(sectorJn, centroDeCostos);
+
+		assertNotNull(createResult);
 
 	}
 
 	@Test
-	public void testCreateCohort() {
-		MoodleClientApi client = new MoodleClientApiImpl();
-
-		try {
-			String sectorJn = "At. al PacientePrueba2";
-			String centroDeCostos = "OperacionesPrueba2";
-
-			CohortData createResult = client.createCohort(sectorJn, centroDeCostos);
-
-			assertNotNull(createResult);
-
-		} catch (Exception e) {
-			assertNotNull(null);
-		}
-
-	}
-
-	@Test
-	public void testParsearUsuarios() {
+	public void testParsearUsuarios() throws Exception {
 
 		List<UserData> result = null;
 		String path = Config.get("users.file.path.test");
+		result = CSVParser.parseUsers(path);
 
-		try {
-			result = CSVParser.parseUsers(path);
-		} catch (Exception e) {
-
-		}
 		System.out.println("Cantidad de usuarios: " + result.size());
 
 		Assertions.assertNotNull(result, "resultado null");
 	}
 
 	@Test
-	public void testCreateUsersFormFile() throws ExternalApiException, CSVParserException {
+	public void testCreateUsersFormFile() throws Exception {
 
 		MoodleClientApi moodleClient = new MoodleClientApiImpl();
 		List<UserData> users = null;

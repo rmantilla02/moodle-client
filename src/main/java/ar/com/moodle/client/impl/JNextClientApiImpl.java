@@ -1,4 +1,4 @@
-package ar.com.moodle.jnext.client;
+package ar.com.moodle.client.impl;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import ar.com.moodle.client.JNextClientApi;
 import ar.com.moodle.config.Config;
 import ar.com.moodle.exception.BusinessException;
 import ar.com.moodle.exception.ExternalApiException;
@@ -33,8 +34,6 @@ public class JNextClientApiImpl implements JNextClientApi {
 	private final String JNEXT_BASE_URL = "https://www.cloudpayroll.com.ar";
 //	private final String JNEXT_BASE_URL = "https:localhost:3000";
 	private final String FUNCTION_LEGAJOS_CERT_GT = "//apiint/gtLegajos";
-
-	private final String FUNCTION_LEGAJOS_CERT_IS = "//apiint/Legajos";
 	private final String FUNCTION_LEGAJOS_IADT_CERT_IS = "//apiint/LegajosSelBusIADT";
 
 	private static final Logger logger = LogManager.getLogger(JNextClientApiImpl.class);
