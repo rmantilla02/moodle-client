@@ -35,8 +35,6 @@ public class MoodleClient {
 			logger.info("Iniciando configApplicationContext...");
 
 			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MoodleClient.class);
-//			MoodleProcess process = new MoodleProcess();
-//			process.executeProcess();
 
 		} catch (Exception e) {
 			logger.error("error al iniciar el proceso ", e);

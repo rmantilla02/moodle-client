@@ -27,10 +27,11 @@ public class DateUtils {
 	public static LocalDate convertToLocalDate(String date) {
 		return convertToDateTime(date).toLocalDate();
 	}
-	
+
 	public static long daysBetween(LocalDate from, LocalDate to) {
-        if (from == null || to == null) return 0;
-        return ChronoUnit.DAYS.between(from, to);
-    }
-	
+		if (from == null || to == null)
+			return 0;
+		return ChronoUnit.DAYS.between(from, to);
+	}
+
 }

@@ -105,7 +105,7 @@ public class JNextClientApiImpl implements JNextClientApi {
 					response.append(inputLine);
 				}
 			}
-//			System.out.println("response: " + response.toString());
+
 			Gson gson = new Gson();
 			result = gson.fromJson(response.toString(), new TypeToken<List<LegajoData>>() {
 			}.getType());

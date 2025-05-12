@@ -153,7 +153,6 @@ public class CSVParser {
 	}
 
 	public static void exportUsersToCsv(List<UserData> users, String filePath) throws CSVParserException {
-//		String header = "username;password;firstname;lastname;email;dni;legajo_id;sector_jn;centro_de_costos;puesto";
 		String header = KEY_USERNAME + SEP + KEY_PASSWORD + SEP + KEY_FIRSTNAME + SEP + KEY_LASTNAME + SEP + KEY_EMAIL
 				+ SEP + KEY_DNI + SEP + KEY_LEGAJO_ID + SEP + KEY_SECTOR_JN + SEP + KEY_CENTRO_DE_COSTOS + SEP
 				+ KEY_PUESTO + SEP + KEY_FECHA_INGRESO;
