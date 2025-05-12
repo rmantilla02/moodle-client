@@ -13,7 +13,7 @@ Proyecto para crear usuarios y asignarlos a cursos en la plataforma de Moodle
 
       mvn clean install
 
-## Para generar el jar y ejecutarlo
+- Para generar el jar y ejecutarlo
 
       mvn clean package -DskipTests
       java -jar target/moodle-client-0.0.1-SNAPSHOT-jar-with-dependencies.jar
