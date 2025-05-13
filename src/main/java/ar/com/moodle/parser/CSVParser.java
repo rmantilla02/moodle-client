@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,25 +20,25 @@ import ar.com.moodle.model.UserData;
 
 public class CSVParser {
 
-	private static String SEP = ";";
-	private static String CHAR_BOB = "\uFEFF";
-	private static int CANT_COLUM_HEADER = 10;
-	private static String KEY_USERNAME = "username";
-	private static String KEY_PASSWORD = "password";
-	private static String KEY_FIRSTNAME = "firstname";
-	private static String KEY_LASTNAME = "lastname";
-	private static String KEY_EMAIL = "email";
-	private static String KEY_DNI = "dni";
-	private static String KEY_LEGAJO_ID = "legajo_id";
-	private static String KEY_SECTOR_JN = "sector_jn";
-	private static String KEY_CENTRO_DE_COSTOS = "centro_de_costos";
-	private static String KEY_PUESTO = "puesto";
-	private static String KEY_FECHA_INGRESO = "fecha_ingreso";
+	private static final String SEP = ";";
+	private static final String CHAR_BOB = "\uFEFF";
+	private static final int NUMBER_OF_HEADER_COLUMNS = 10;
+	private static final String USERNAME_KEY = "username";
+	private static final String PASSWORD_KEY = "password";
+	private static final String FIRSTNAME_KEY = "firstname";
+	private static final String LASTNAME_KEY = "lastname";
+	private static final String EMAIL_KEY = "email";
+	private static final String DNI_KEY = "dni";
+	private static final String LEGAJO_ID_KEY = "legajo_id";
+	private static final String SECTOR_JN_KEY = "sector_jn";
+	private static final String CENTRO_DE_COSTOS_KEY = "centro_de_costos";
+	private static final String PUESTO_KEY = "puesto";
+	private static final String FECHA_INGRESO_KEY = "fecha_ingreso";
 
 	private static final Logger logger = LogManager.getLogger(CSVParser.class);
 
 	public static List<UserData> parseUsers(String filePath) throws CSVParserException {
-		List<UserData> result = new ArrayList<UserData>();
+		List<UserData> result = new ArrayList<>();
 		String linea;
 		int lineaNum = 0;
 
@@ -46,8 +47,8 @@ public class CSVParser {
 			throw new CSVParserException("error al parsear los usuarios.  filePath is null");
 		}
 
-		logger.info("iniciando el parser del archivo: " + filePath);
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "UTF-8"))) {
+		logger.info("iniciando el parser del archivo {}",filePath);
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
 			while ((linea = br.readLine()) != null) {
 				if (lineaNum == 0) {
 					lineaNum++;
@@ -64,9 +65,9 @@ public class CSVParser {
 				user.setEmail(valores[4].replace(CHAR_BOB, "").trim());
 				validateEmail(lineaNum, user.getUsername(), user.getEmail());
 				user.setDni(valores[5].replace(CHAR_BOB, "").trim());
-				validateNumericValue(lineaNum, KEY_DNI, user.getDni());
+				validateNumericValue(lineaNum, DNI_KEY, user.getDni());
 				user.setLegajoId(valores[6].replace(CHAR_BOB, "").trim());
-				validateNumericValue(lineaNum, KEY_LEGAJO_ID, user.getLegajoId());
+				validateNumericValue(lineaNum, LEGAJO_ID_KEY, user.getLegajoId());
 				user.setSectorJn(valores[7].replace(CHAR_BOB, "").trim().toUpperCase());
 				user.setCentroDeCostos(valores[8].replace(CHAR_BOB, "").trim().toUpperCase());
 				user.setPuesto(valores[9].replace(CHAR_BOB, "").trim().toUpperCase());
@@ -76,10 +77,10 @@ public class CSVParser {
 			}
 
 		} catch (ParserValueException pe) {
-			logger.error("Error al parsear el usuario " + pe.getMessage(), pe);
+			logger.error("Error al parsear el usuario ", pe);
 			throw new CSVParserException("Error al parsear el usuario " + pe.getMessage(), pe);
 		} catch (Exception ex) {
-			logger.error("Error inesperado al procesar el archivo. " + ex.getMessage());
+			logger.error("Error inesperado al procesar el archivo.", ex);
 			throw new CSVParserException("Error inesperado al procesar el archivo. " + ex.getMessage(), ex);
 		}
 
@@ -88,29 +89,29 @@ public class CSVParser {
 
 	private static void validateHeader(String header) throws ParserValueException {
 		String[] valores = header.split(SEP);
-		if (CANT_COLUM_HEADER != valores.length) {
+		if (NUMBER_OF_HEADER_COLUMNS != valores.length) {
 			throw new ParserValueException("error en la cantidad de columnas");
 		}
-		validateColum(KEY_USERNAME, valores[0].replace(CHAR_BOB, "").trim());
-		validateColum(KEY_PASSWORD, valores[1].replace(CHAR_BOB, "").trim());
-		validateColum(KEY_FIRSTNAME, valores[2].replace(CHAR_BOB, "").trim());
-		validateColum(KEY_LASTNAME, valores[3].replace(CHAR_BOB, "").trim());
-		validateColum(KEY_EMAIL, valores[4].replace(CHAR_BOB, "").trim());
-		validateColum(KEY_DNI, valores[5].replace(CHAR_BOB, "").trim());
-		validateColum(KEY_LEGAJO_ID, valores[6].replace(CHAR_BOB, "").trim());
-		validateColum(KEY_SECTOR_JN, valores[7].replace(CHAR_BOB, "").trim());
-		validateColum(KEY_CENTRO_DE_COSTOS, valores[8].replace(CHAR_BOB, "").trim());
-		validateColum(KEY_PUESTO, valores[9].replace(CHAR_BOB, "").trim());
+		validateColum(USERNAME_KEY, valores[0].replace(CHAR_BOB, "").trim());
+		validateColum(PASSWORD_KEY, valores[1].replace(CHAR_BOB, "").trim());
+		validateColum(FIRSTNAME_KEY, valores[2].replace(CHAR_BOB, "").trim());
+		validateColum(LASTNAME_KEY, valores[3].replace(CHAR_BOB, "").trim());
+		validateColum(EMAIL_KEY, valores[4].replace(CHAR_BOB, "").trim());
+		validateColum(DNI_KEY, valores[5].replace(CHAR_BOB, "").trim());
+		validateColum(LEGAJO_ID_KEY, valores[6].replace(CHAR_BOB, "").trim());
+		validateColum(SECTOR_JN_KEY, valores[7].replace(CHAR_BOB, "").trim());
+		validateColum(CENTRO_DE_COSTOS_KEY, valores[8].replace(CHAR_BOB, "").trim());
+		validateColum(PUESTO_KEY, valores[9].replace(CHAR_BOB, "").trim());
 	}
 
 	public static void validateUser(UserData user) throws ParserUserException {
 		try {
-			validateNumericValue(user.getUsername(), KEY_DNI, user.getDni());
-			validateNumericValue(user.getLegajoId(), KEY_LEGAJO_ID, user.getLegajoId());
+			validateNumericValue(user.getUsername(), DNI_KEY, user.getDni());
+			validateNumericValue(user.getLegajoId(), LEGAJO_ID_KEY, user.getLegajoId());
 			validateEmail(user.getUsername(), user.getEmail());
 
 		} catch (ParserValueException e) {
-			logger.error("error al validar los datos del usuario." + " - " + e.getMessage());
+			logger.error("error al validar los datos del usuario.", e);
 			throw new ParserUserException("error al validar los datos del usuario: " + user.getUsername(), e);
 		}
 	}
@@ -147,15 +148,16 @@ public class CSVParser {
 						"error de email en el registro " + linea + ". username: " + username + ", valor: " + value);
 			}
 		} else {
-			logger.warn("el usuario " + username + " de la linea: " + linea + " no tiene email.");
+			logger.warn("El usuario {} de la línea {} no tiene email.", username, linea);
+
 		}
 
 	}
 
 	public static void exportUsersToCsv(List<UserData> users, String filePath) throws CSVParserException {
-		String header = KEY_USERNAME + SEP + KEY_PASSWORD + SEP + KEY_FIRSTNAME + SEP + KEY_LASTNAME + SEP + KEY_EMAIL
-				+ SEP + KEY_DNI + SEP + KEY_LEGAJO_ID + SEP + KEY_SECTOR_JN + SEP + KEY_CENTRO_DE_COSTOS + SEP
-				+ KEY_PUESTO + SEP + KEY_FECHA_INGRESO;
+		String header = USERNAME_KEY + SEP + PASSWORD_KEY + SEP + FIRSTNAME_KEY + SEP + LASTNAME_KEY + SEP + EMAIL_KEY
+				+ SEP + DNI_KEY + SEP + LEGAJO_ID_KEY + SEP + SECTOR_JN_KEY + SEP + CENTRO_DE_COSTOS_KEY + SEP
+				+ PUESTO_KEY + SEP + FECHA_INGRESO_KEY;
 
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
 			writer.write(header);
@@ -175,7 +177,7 @@ public class CSVParser {
 			logger.error("Error al crear el archivo", e);
 			throw new CSVParserException("Error al crear el archivo", e);
 		} catch (Exception ex) {
-			logger.error("Error inesperado al crear el archivo. " + ex.getMessage());
+			logger.error("Error inesperado al crear el archivo", ex);
 			throw new CSVParserException("Error inesperado al crear el archivo. ", ex);
 		}
 	}

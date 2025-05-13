@@ -19,7 +19,7 @@ public class DateUtils {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 			result = LocalDateTime.parse(date, formatter);
 		} catch (DateTimeParseException e) {
-			logger.error("error al parsear la fecha: " + date);
+			logger.error("error al parsear la fecha {}", date);
 		}
 		return result;
 	}

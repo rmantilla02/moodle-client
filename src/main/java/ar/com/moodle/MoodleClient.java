@@ -13,7 +13,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @EnableScheduling
 public class MoodleClient {
 
-	final static Logger logger = LogManager.getLogger(MoodleClient.class);
+	private static final Logger logger = LogManager.getLogger(MoodleClient.class);
 
 	@Bean
 	public MoodleProcess taskScheduled() {
@@ -23,7 +23,7 @@ public class MoodleClient {
 	@Bean
 	public TaskScheduler taskScheduler() {
 		ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-		scheduler.setPoolSize(3); // cantidad de hilos para ejecutar tareas
+		scheduler.setPoolSize(3);
 		scheduler.setThreadNamePrefix("scheduler-thread-");
 		scheduler.initialize();
 		return scheduler;
@@ -32,7 +32,7 @@ public class MoodleClient {
 	public static void main(String[] args) {
 
 		try {
-			logger.info("Iniciando configApplicationContext...");
+			logger.info("Iniciando el proceso para dar de alta a los usuarios en la plataforma de Moodle...");
 
 			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MoodleClient.class);
 

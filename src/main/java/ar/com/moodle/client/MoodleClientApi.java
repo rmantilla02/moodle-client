@@ -33,7 +33,7 @@ public interface MoodleClientApi {
 	/**
 	 * 
 	 * @param user
-	 * @return
+	 * @return username
 	 * @throws ExternalApiException
 	 */
 	public Integer createUser(UserData user) throws ExternalApiException;

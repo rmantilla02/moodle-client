@@ -15,10 +15,10 @@ import ar.com.moodle.model.CohortData;
 import ar.com.moodle.model.UserData;
 import ar.com.moodle.parser.CSVParser;
 
-public class MoodleClientTest {
+class MoodleClientTest {
 
 	@Test
-	public void testCreateUserOk() throws Exception {
+	void testCreateUserOk() throws Exception {
 		MoodleClientApi client = new MoodleClientApiImpl();
 
 		String dni = "11222333";
@@ -42,7 +42,7 @@ public class MoodleClientTest {
 	}
 
 	@Test
-	public void testCreateCohort() throws Exception {
+	void testCreateCohort() throws Exception {
 		MoodleClientApi client = new MoodleClientApiImpl();
 
 		String sectorJn = "At. al PacientePrueba2";
@@ -55,7 +55,7 @@ public class MoodleClientTest {
 	}
 
 	@Test
-	public void testParsearUsuarios() throws Exception {
+	void testParsearUsuarios() throws Exception {
 
 		List<UserData> result = null;
 		String path = Config.get("users.file.path.test");
@@ -67,7 +67,7 @@ public class MoodleClientTest {
 	}
 
 	@Test
-	public void testCreateUsersFormFile() throws Exception {
+	void testCreateUsersFormFile() throws Exception {
 
 		MoodleClientApi moodleClient = new MoodleClientApiImpl();
 		List<UserData> users = null;
@@ -81,7 +81,7 @@ public class MoodleClientTest {
 	}
 
 	@Test
-	public void testGetAllCourses() throws ExternalApiException {
+	void testGetAllCourses() throws ExternalApiException {
 		MoodleClientApi client = new MoodleClientApiImpl();
 
 		String result;
@@ -90,7 +90,7 @@ public class MoodleClientTest {
 	}
 
 	@Test
-	public void testGetAllCohortes() throws ExternalApiException {
+	void testGetAllCohortes() throws ExternalApiException {
 		MoodleClientApi client = new MoodleClientApiImpl();
 
 		List<CohortData> result;

@@ -27,6 +27,12 @@ import ar.com.moodle.model.UserData;
 public class MoodleClientApiImpl implements MoodleClientApi {
 
 	private static final String MOODLE_URL = "https://campus.miscapacitaciones.com.ar/webservice/rest/server.php";
+	private static final String CONF_MOODLE_TOKEN = "moodle.token";
+	private static final String WS_TOKEN = "wstoken=";
+	private static final String WS_FUNCTION = "wsfunction=";
+	private static final String CONTENT_TYPE = "Content-Type";
+	private static final String CONTENT_TYPE_FORM_URLENCODED = "application/x-www-form-urlencoded";
+	private static final String WS_MOODLE_FORMAT = "moodlewsrestformat=json";
 	private static final String FUNCTION_CORE_COURSE_GET_COURSES = "core_course_get_courses";
 	private static final String FUNCTION_CORE_USER_CREATE_USERS = "core_user_create_users";
 	private static final String FUNCTION_CORE_COHORT_GET_COHORTS = "core_cohort_get_cohorts";
@@ -38,11 +44,10 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 	@Override
 	public Integer createUser(UserData user) throws ExternalApiException {
 		try {
-			logger.info("Dando de alta el usuario: " + user.getUsername());
-			String token = Config.get("moodle.token");
+			logger.info("Dando de alta el usuario {} ", user.getUsername());
+			String token = Config.get(CONF_MOODLE_TOKEN);
 
-			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_USER_CREATE_USERS
-					+ "&moodlewsrestformat=json";
+			String url = this.buildUrl(token, FUNCTION_CORE_USER_CREATE_USERS);
 
 			String body = this.buildUserBody(user.getUsername(), user.getPassword(), user.getFirstname(),
 					user.getLastname(), user.getEmail(), user.getDni(), user.getLegajoId(), user.getSectorJn(),
@@ -51,45 +56,54 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 			HttpClient client = HttpClient.newHttpClient();
 
 			HttpRequest request = HttpRequest.newBuilder().uri(new URI(url))
-					.header("Content-Type", "application/x-www-form-urlencoded").POST(BodyPublishers.ofString(body))
+					.header(CONTENT_TYPE, CONTENT_TYPE_FORM_URLENCODED).POST(BodyPublishers.ofString(body))
 					.build();
 
-			logger.info("invocando a la función core_user_create_users...");
+			logger.info("invocando a la funcion core_user_create_users...");
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-			logger.info("Respuesta de Moodle: " + response.body());
+			logger.info("Respuesta de Moodle: {}", response.body());
 			return response.statusCode();
 		} catch (IOException ioe) {
-			logger.error("Error de comunicación con el servicio externo. " + ioe.getMessage(), ioe);
-			throw new ExternalApiException("Error de comunicación con el servicio: " + ioe.getMessage(), ioe);
+			logger.error("Error de comunicación con el servicio externo. ", ioe);
+			throw new ExternalApiException("Error de comunicación con el servicio: ", ioe);
 		} catch (Exception ex) {
-			logger.error("Error inesperado la dar de alta el usuario: " + user.getUsername(), ex.getCause());
+			logger.error("Error inesperado la dar de alta el usuario: {}", user.getUsername(), ex.getCause());
 			throw new ExternalApiException("Error inesperado la dar de alta el usuario: " + user.getUsername(), ex);
 		}
+	}
+
+	private String buildUrl(String token, String function) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(MOODLE_URL);
+		sb.append("?" + WS_TOKEN + token);
+		sb.append("&" + WS_FUNCTION + function);
+		sb.append("&" + WS_MOODLE_FORMAT);
+
+		return sb.toString();
 	}
 
 	@Override
 	public CohortData createCohort(String sectorJn, String centroDeCostos) throws ExternalApiException {
 		CohortData result = null;
 		try {
-			logger.info("Creando cohort... " + sectorJn + "-" + centroDeCostos);
-			String token = Config.get("moodle.token");
+			logger.info("Creando cohort... sector {} - centroDeCostos {}", sectorJn, centroDeCostos);
+			String token = Config.get(CONF_MOODLE_TOKEN);
 
-			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_COHORT_CREATE_COHORTS
-					+ "&moodlewsrestformat=json";
+			String url = this.buildUrl(token, FUNCTION_CORE_COHORT_CREATE_COHORTS);
 
 			String body = this.buildCohortBody(sectorJn, centroDeCostos);
 
 			HttpClient client = HttpClient.newHttpClient();
 
 			HttpRequest request = HttpRequest.newBuilder().uri(new URI(url))
-					.header("Content-Type", "application/x-www-form-urlencoded").POST(BodyPublishers.ofString(body))
+					.header(CONTENT_TYPE, CONTENT_TYPE_FORM_URLENCODED).POST(BodyPublishers.ofString(body))
 					.build();
 
-			logger.info("invocando a la función de moodle core_cohort_create_cohorts...");
+			logger.info("invocando a la funcion de moodle core_cohort_create_cohorts...");
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-			logger.info("Response: " + response.body());
+			logger.info("Response: {}", response.body());
 			if (response.statusCode() == HttpStatus.SC_OK && !response.body().contains("exception")) {
 				Gson gson = new Gson();
 				List<CohortData> cohorts = gson.fromJson(response.body(), new TypeToken<List<CohortData>>() {
@@ -99,7 +113,7 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 
 			return result;
 		} catch (IOException ioe) {
-			logger.error("Error de comunicación con el servicio externo. " + ioe.getMessage(), ioe);
+			logger.error("Error de comunicación con el servicio externo.", ioe);
 			throw new ExternalApiException("Error de comunicación con el servicio: " + ioe.getMessage(), ioe);
 		} catch (Exception ex) {
 			logger.error("Error inesperado al crear cohort " + sectorJn + "-" + centroDeCostos, ex);
@@ -168,10 +182,9 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 		String result;
 		try {
 			logger.info("Consultando los cursos... ");
-			String token = Config.get("moodle.token");
+			String token = Config.get(CONF_MOODLE_TOKEN);
 
-			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_COURSE_GET_COURSES
-					+ "&moodlewsrestformat=json";
+			String url = this.buildUrl(token, FUNCTION_CORE_COURSE_GET_COURSES);
 
 			HttpClient client = HttpClient.newHttpClient();
 
@@ -184,7 +197,7 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 		} catch (IOException ioe) {
 			throw new ExternalApiException("Error de comunicación con el servicio externo: " + ioe.getMessage(), ioe);
 		} catch (Exception ex) {
-			logger.error("Error inesperado al consultar los cursos . Message: " + ex.getMessage());
+			logger.error("Error inesperado al consultar los cursos.", ex);
 			throw new ExternalApiException("Error inesperado al consultar los cursos. " + ex.getMessage(), ex);
 		}
 	}
@@ -193,10 +206,9 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 	public List<CohortData> getAllCohortes() throws ExternalApiException {
 		try {
 			logger.info("invocando al servicio core_cohort_get_cohorts...");
-			String token = Config.get("moodle.token");
+			String token = Config.get(CONF_MOODLE_TOKEN);
 
-			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_COHORT_GET_COHORTS
-					+ "&moodlewsrestformat=json";
+			String url = this.buildUrl(token, FUNCTION_CORE_COHORT_GET_COHORTS);
 
 			HttpClient client = HttpClient.newHttpClient();
 
@@ -215,7 +227,7 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 		} catch (IOException e) {
 			throw new ExternalApiException("Error de comunicación con el servicio externo: " + e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error("error inesperado al consultar las cohortes: " + e.getCause(), e);
+			logger.error("error inesperado al consultar las cohortes: {}", e.getCause(), e);
 			throw new ExternalApiException("error inesperado al consultar las cohortes: " + e.getMessage(), e);
 		}
 	}
@@ -223,30 +235,31 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 	@Override
 	public Integer cohortAddMember(String idnumberCohort, String username) throws ExternalApiException {
 		try {
-			logger.info("agregando el usuario " + username + " al cohort " + idnumberCohort);
-			String token = Config.get("moodle.token");
+			logger.info("agregando el usuario {} al cohort {}", username, idnumberCohort);
+			String token = Config.get(CONF_MOODLE_TOKEN);
 
-			String url = MOODLE_URL + "?wstoken=" + token + "&wsfunction=" + FUNCTION_CORE_COHORT_ADD_COHORT_MEMBERS
-					+ "&moodlewsrestformat=json";
+			String url = this.buildUrl(token, FUNCTION_CORE_COHORT_ADD_COHORT_MEMBERS);
 
 			String body = this.buildCohortAddMemberBody(idnumberCohort, username);
 
 			HttpClient client = HttpClient.newHttpClient();
 
 			HttpRequest request = HttpRequest.newBuilder().uri(new URI(url))
-					.header("Content-Type", "application/x-www-form-urlencoded").POST(BodyPublishers.ofString(body))
+					.header(CONTENT_TYPE, CONTENT_TYPE_FORM_URLENCODED).POST(BodyPublishers.ofString(body))
 					.build();
 
-			logger.info("invocando a la función " + FUNCTION_CORE_COHORT_ADD_COHORT_MEMBERS + "...");
+			logger.info("invocando a la funcion {} ...", FUNCTION_CORE_COHORT_ADD_COHORT_MEMBERS);
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-			logger.info("response: " + response.body());
+			if (response.statusCode() != HttpStatus.SC_OK)
+				throw new BusinessException("Error en la funcion " + FUNCTION_CORE_COHORT_ADD_COHORT_MEMBERS, null);
+
+			logger.info("response: {}", response.body());
 			return response.statusCode();
 		} catch (IOException ioe) {
 			throw new ExternalApiException("Error de comunicación con el servicio externo: " + ioe.getMessage(), ioe);
 		} catch (Exception ex) {
-			logger.error("Error inesperado al asignar el usuario " + username + "- al cohort " + idnumberCohort
-					+ ". Message: " + ex.getMessage());
+			logger.error("Error inesperado al asignar el usuario {} al cohort {} ", username, idnumberCohort, ex);
 			throw new ExternalApiException("Error inesperado al asignar el usuario. " + ex.getMessage(), ex);
 		}
 	}

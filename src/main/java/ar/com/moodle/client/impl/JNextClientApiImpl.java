@@ -31,10 +31,9 @@ import ar.com.moodle.model.LegajoData;
 
 public class JNextClientApiImpl implements JNextClientApi {
 
-	private final String JNEXT_BASE_URL = "https://www.cloudpayroll.com.ar";
-//	private final String JNEXT_BASE_URL = "https:localhost:3000";
-	private final String FUNCTION_LEGAJOS_CERT_GT = "//apiint/gtLegajos";
-	private final String FUNCTION_LEGAJOS_IADT_CERT_IS = "//apiint/LegajosSelBusIADT";
+	private static final String JNEXT_BASE_URL = "https://www.cloudpayroll.com.ar";
+	private static final String FUNCTION_LEGAJOS_CERT_GT = "//apiint/gtLegajos";
+	private static final String FUNCTION_LEGAJOS_IADT_CERT_IS = "//apiint/LegajosSelBusIADT";
 
 	private static final Logger logger = LogManager.getLogger(JNextClientApiImpl.class);
 
@@ -43,12 +42,12 @@ public class JNextClientApiImpl implements JNextClientApi {
 		StringBuilder response = new StringBuilder();
 		List<LegajoData> result = null;
 		try {
-			logger.info("consultando los legajos de la empresaId: " + empresaId);
+			logger.info("consultando los legajos de la empresaId {} ", empresaId);
 
-			String cert_gt_file_path = Config.get("jnext.cert.gt.file.path");
-			String cert_gt_pass = Config.get("jnext.cert.gt.password");
+			String certGTFilePath = Config.get("jnext.cert.gt.file.path");
+			String certGTPassword = Config.get("jnext.cert.gt.password");
 
-			SSLContext sslContext = this.buildSSLContext(cert_gt_file_path, cert_gt_pass);
+			SSLContext sslContext = this.buildSSLContext(certGTFilePath, certGTPassword);
 			HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
 
 			URL url = new URL(JNEXT_BASE_URL + FUNCTION_LEGAJOS_CERT_GT + "?EmpresaID=" + empresaId
@@ -72,7 +71,7 @@ public class JNextClientApiImpl implements JNextClientApi {
 			}.getType());
 			return result;
 		} catch (IOException ioe) {
-			logger.error("Error de comunicación con el servicio externo. " + ioe.getMessage(), ioe);
+			logger.error("Error de comunicación con el servicio externo", ioe);
 			throw new ExternalApiException("Error de comunicación con el servicio: " + ioe.getMessage(), ioe);
 		} catch (Exception ex) {
 			logger.error("Error inesperado al consultar los legajos.", ex);
@@ -85,10 +84,10 @@ public class JNextClientApiImpl implements JNextClientApi {
 		StringBuilder response = new StringBuilder();
 		List<LegajoData> result = null;
 		try {
-			String cert_is_file_path = Config.get("jnext.cert.is.file.path");
-			String cert_is_pass = Config.get("jnext.cert.is.password");
+			String certISFilePath = Config.get("jnext.cert.is.file.path");
+			String certISPassword = Config.get("jnext.cert.is.password");
 
-			SSLContext sslContext = this.buildSSLContext(cert_is_file_path, cert_is_pass);
+			SSLContext sslContext = this.buildSSLContext(certISFilePath, certISPassword);
 			HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
 
 			URL url = new URL(JNEXT_BASE_URL + FUNCTION_LEGAJOS_IADT_CERT_IS + "?Empresa_ID=" + empresaId);
@@ -112,7 +111,7 @@ public class JNextClientApiImpl implements JNextClientApi {
 			return result;
 
 		} catch (IOException ioe) {
-			logger.error("Error de comunicación con el servicio externo. " + ioe.getMessage(), ioe);
+			logger.error("Error de comunicación con el servicio externo. ", ioe);
 			throw new ExternalApiException("Error de comunicación con el servicio: " + ioe.getMessage(), ioe);
 		} catch (Exception ex) {
 			logger.error("Error inesperado al consultar los legajos.", ex);

@@ -1,17 +1,29 @@
 package ar.com.moodle;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
 
-public class MoodleProcessTest {
+class MoodleProcessTest {
 
 	@Test
-	public void testExecuteProcess() throws Exception {
+	void testExecuteProcessJnext() {
+		try {
+			MoodleProcess process = new MoodleProcess();
+			process.executeProcessJnext();
+		} catch (Exception e) {
+			assertNotNull(null);
+		}
+	}
 
-		MoodleProcess process = new MoodleProcess();
-
-//		process.executeProcessTest("users.file.path.test");
-//		process.executeProcess("users.file.path.test");
-		process.executeProcessJnext();
+	@Test
+	void testExecuteProcessFromFile() {
+		try {
+			MoodleProcess process = new MoodleProcess();
+			process.executeProcessFromFile("users.file.path.test");
+		} catch (Exception e) {
+			assertNotNull(null);
+		}
 	}
 
 }

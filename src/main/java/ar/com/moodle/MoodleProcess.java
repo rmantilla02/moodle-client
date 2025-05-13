@@ -25,20 +25,23 @@ import ar.com.moodle.parser.DateUtils;
 @Component
 public class MoodleProcess {
 
-	final static Logger logger = LogManager.getLogger(MoodleProcess.class);
-	private final int ID_EMPRESA_SANATORIO = 6201;
+	private static final Logger logger = LogManager.getLogger(MoodleProcess.class);
+	private static final int ID_EMPRESA_SANATORIO = 6201;
 
 	// Se ejecuta todos los dias a las 10am
 	@Scheduled(cron = "0 0 10 * * ?")
 	public void executeProcessJnext() {
 		try {
-			logger.info("Iniciando proceso para dar de alta a los usuarios en la plataforma de Moodle...");
-
 			LocalDate yesterday = LocalDate.now().minusDays(1);
+
+			logger.info("Consultando legajos con fechaIngreso {} ...", yesterday);
+
 			List<UserData> newUsers = getNewUsersJnextByIdEmpresa(ID_EMPRESA_SANATORIO, yesterday);
 
-			logger.info("Cantidad de usuarios a procesar: " + newUsers.size());
-			this.procesarUsuarios(newUsers);
+			logger.info("Cantidad de usuarios a procesar  {} ", newUsers.size());
+
+			if (!newUsers.isEmpty())
+				this.procesarUsuarios(newUsers);
 
 			logger.info("fin del proceso...");
 		} catch (ExternalApiException e) {
@@ -58,8 +61,8 @@ public class MoodleProcess {
 		JNextClientApi jnextClient = new JNextClientApiImpl();
 
 		List<LegajoData> legajos = null;
-		List<UserData> newUsers = new ArrayList<UserData>();
-		logger.info("consultando los legajos en jnext... " + "idEmpresa: " + idEmpresa);
+		List<UserData> newUsers = new ArrayList<>();
+		logger.info("consultando los legajos en jnext para idEmpresa {}", idEmpresa);
 		try {
 			legajos = jnextClient.getLegajosWithcertificateIS(idEmpresa);
 
@@ -89,7 +92,7 @@ public class MoodleProcess {
 		List<CohortData> allCohorts = moodleClient.getAllCohortes();
 		for (UserData user : newUsers) {
 			try {
-				// validar usuario
+
 				CSVParser.validateUser(user);
 
 				CohortData cohortExist = getCohortIfExist(allCohorts, user.getSectorJn(), user.getCentroDeCostos());
@@ -97,21 +100,20 @@ public class MoodleProcess {
 
 					cohortExist = moodleClient.createCohort(user.getSectorJn(), user.getCentroDeCostos());
 					if (cohortExist == null) {
-						logger.error("error al crear la cohort " + user.getSectorJn() + "-" + user.getCentroDeCostos()
-								+ " para el usuario " + user.getUsername());
+						logger.error("error al crear la cohort {}-{} para el usuario {}", user.getSectorJn(),
+								user.getCentroDeCostos(), user.getUsername());
 						continue;
 					} else {
 						allCohorts.add(cohortExist);
 					}
 				}
-				// crear usuario
 				moodleClient.createUser(user);
 				// asignarlo a la cohort
 				moodleClient.cohortAddMember(cohortExist.getIdnumber(), user.getUsername());
 			} catch (ParserUserException pe) {
-				logger.error("error al validar el usuario: " + user.getUsername(), pe);
+				logger.error("error al validar el usuario: {}", user.getUsername(), pe);
 			} catch (Exception ex) {
-				logger.error("error inesperado procesar el usuario " + user.getUsername(), ex);
+				logger.error("error inesperado procesar el usuario {}", user.getUsername(), ex);
 			}
 		}
 	}
@@ -125,11 +127,11 @@ public class MoodleProcess {
 	 */
 	private static CohortData getCohortIfExist(List<CohortData> cohortes, String sectorJn, String centroDeCostos) {
 		CohortData result = cohortes.stream()
-				.filter(c -> c.getName().contains(sectorJn) & c.getName().contains(centroDeCostos)).findFirst()
+				.filter(c -> c.getName().contains(sectorJn) && c.getName().contains(centroDeCostos)).findFirst()
 				.orElse(null);
 
 		if (result != null) {
-			logger.info("existe cohort con id: " + result.getId() + ", nombre: " + result.getName());
+			logger.info("existe cohort con id: {} , nombre {} ", result.getId(), result.getName());
 		}
 		return result;
 	}
@@ -141,7 +143,7 @@ public class MoodleProcess {
 			String filePath = Config.get(confFilePath);
 			List<UserData> newUsers = CSVParser.parseUsers(filePath);
 
-			logger.info("Cantidad de usuarios a procesar: " + newUsers.size());
+			logger.info("Cantidad de usuarios a procesar: {}", newUsers.size());
 			procesarUsuarios(newUsers);
 
 			logger.info("fin del proceso...");
