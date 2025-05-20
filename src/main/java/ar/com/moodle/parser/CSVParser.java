@@ -47,8 +47,9 @@ public class CSVParser {
 			throw new CSVParserException("error al parsear los usuarios.  filePath is null");
 		}
 
-		logger.info("iniciando el parser del archivo {}",filePath);
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
+		logger.info("iniciando el parser del archivo {}", filePath);
+		try (BufferedReader br = new BufferedReader(
+				new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
 			while ((linea = br.readLine()) != null) {
 				if (lineaNum == 0) {
 					lineaNum++;
@@ -63,7 +64,6 @@ public class CSVParser {
 				user.setFirstname(valores[2].replace(CHAR_BOB, "").trim());
 				user.setLastname(valores[3].replace(CHAR_BOB, "").trim());
 				user.setEmail(valores[4].replace(CHAR_BOB, "").trim());
-				validateEmail(lineaNum, user.getUsername(), user.getEmail());
 				user.setDni(valores[5].replace(CHAR_BOB, "").trim());
 				validateNumericValue(lineaNum, DNI_KEY, user.getDni());
 				user.setLegajoId(valores[6].replace(CHAR_BOB, "").trim());
@@ -136,22 +136,8 @@ public class CSVParser {
 
 	private static void validateEmail(String username, String value) throws ParserValueException {
 		if (value == null || value.isEmpty() || !value.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-			throw new ParserValueException(
-					"error con el usuario: " + username + ". email incorrecto. valor:  " + value);
+			throw new ParserValueException("error con el usuario: " + username + ". email incorrecto, valor: " + value);
 		}
-	}
-
-	private static void validateEmail(int linea, String username, String value) throws ParserValueException {
-		if (value != null && !value.isEmpty()) {
-			if (!value.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-				throw new ParserValueException(
-						"error de email en el registro " + linea + ". username: " + username + ", valor: " + value);
-			}
-		} else {
-			logger.warn("El usuario {} de la línea {} no tiene email.", username, linea);
-
-		}
-
 	}
 
 	public static void exportUsersToCsv(List<UserData> users, String filePath) throws CSVParserException {

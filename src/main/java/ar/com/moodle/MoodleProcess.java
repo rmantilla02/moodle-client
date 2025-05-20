@@ -34,8 +34,6 @@ public class MoodleProcess {
 		try {
 			LocalDate yesterday = LocalDate.now().minusDays(1);
 
-			logger.info("Consultando legajos con fechaIngreso {} ...", yesterday);
-
 			List<UserData> newUsers = getNewUsersJnextByIdEmpresa(ID_EMPRESA_SANATORIO, yesterday);
 
 			logger.info("Cantidad de usuarios a procesar  {} ", newUsers.size());
@@ -54,21 +52,22 @@ public class MoodleProcess {
 	/**
 	 * 
 	 * @param idEmpresa
-	 * @return
+	 * @return los usuarios a dar de alta en la plataforma de moodle
 	 * @throws ExternalApiException
 	 */
-	private List<UserData> getNewUsersJnextByIdEmpresa(Integer idEmpresa, LocalDate date) throws ExternalApiException {
+	private List<UserData> getNewUsersJnextByIdEmpresa(Integer idEmpresa, LocalDate fechaIngreso)
+			throws ExternalApiException {
 		JNextClientApi jnextClient = new JNextClientApiImpl();
 
 		List<LegajoData> legajos = null;
 		List<UserData> newUsers = new ArrayList<>();
-		logger.info("consultando los legajos en jnext para idEmpresa {}", idEmpresa);
+		logger.info("consultando legajos en jnext con idEmpresa {} y ingresoIngreso {}", idEmpresa, fechaIngreso);
 		try {
 			legajos = jnextClient.getLegajosWithcertificateIS(idEmpresa);
 
 			for (LegajoData legajo : legajos) {
 				LocalDate dateLegajo = DateUtils.convertToLocalDate(legajo.getFechaIngreso());
-				if (date.equals(dateLegajo)) {
+				if (fechaIngreso.equals(dateLegajo)) {
 					newUsers.add(legajo.mapperToUserData());
 				}
 			}
@@ -78,7 +77,6 @@ public class MoodleProcess {
 		} catch (Exception e) {
 			logger.error("error al consultar los usuarios en jnext", e);
 			throw new ExternalApiException("error al consultar los usuarios en jnex", e);
-
 		}
 	}
 
@@ -92,7 +90,7 @@ public class MoodleProcess {
 		List<CohortData> allCohorts = moodleClient.getAllCohortes();
 		for (UserData user : newUsers) {
 			try {
-
+				logger.info("procesando el usuario {}... ", user.getUsername());
 				CSVParser.validateUser(user);
 
 				CohortData cohortExist = getCohortIfExist(allCohorts, user.getSectorJn(), user.getCentroDeCostos());

@@ -81,15 +81,6 @@ class MoodleClientTest {
 	}
 
 	@Test
-	void testGetAllCourses() throws ExternalApiException {
-		MoodleClientApi client = new MoodleClientApiImpl();
-
-		String result;
-		result = client.getAllCourses();
-		assertNotNull("resultado null", result);
-	}
-
-	@Test
 	void testGetAllCohortes() throws ExternalApiException {
 		MoodleClientApi client = new MoodleClientApiImpl();
 

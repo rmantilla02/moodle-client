@@ -10,13 +10,6 @@ public interface MoodleClientApi {
 
 	/**
 	 * 
-	 * @return los cursos disponibles en la plataforma de Moodle
-	 * @throws ExternalApiException
-	 */
-	public String getAllCourses() throws ExternalApiException;
-
-	/**
-	 * 
 	 * @return cohorts en la plataforma de moodle
 	 */
 	public List<CohortData> getAllCohortes() throws ExternalApiException;
@@ -42,7 +35,7 @@ public interface MoodleClientApi {
 	 * 
 	 * @param idnumberCohort
 	 * @param username
-	 * @return los datos del usuario asignado
+	 * @return los datos del usuario asignado a la cohort
 	 * @throws ExternalApiException
 	 */
 

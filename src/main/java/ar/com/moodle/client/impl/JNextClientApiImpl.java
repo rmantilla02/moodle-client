@@ -56,7 +56,8 @@ public class JNextClientApiImpl implements JNextClientApi {
 			connection.setRequestMethod("GET");
 
 			if (connection.getResponseCode() != HttpStatus.SC_OK)
-				throw new BusinessException("Error al consultar los legajos");
+				throw new BusinessException("Error al consultar los legajos. responseCode: "
+						+ connection.getResponseCode() + "message: " + connection.getResponseMessage());
 
 			try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
 				String inputLine;
@@ -95,7 +96,8 @@ public class JNextClientApiImpl implements JNextClientApi {
 			connection.setRequestMethod("GET");
 
 			if (connection.getResponseCode() != HttpStatus.SC_OK)
-				throw new BusinessException("Error al consultar los legajos");
+				throw new BusinessException("Error al consultar los legajos. responseCode: "
+						+ connection.getResponseCode() + "message: " + connection.getResponseMessage());
 
 			try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
 				String inputLine;
@@ -121,10 +123,8 @@ public class JNextClientApiImpl implements JNextClientApi {
 
 	private SSLContext buildSSLContext(String filepathCert, String passwordCert) throws BusinessException {
 		KeyStore keyStore;
-		try {
+		try (InputStream keyStoreStream = new FileInputStream(filepathCert)) {
 			keyStore = KeyStore.getInstance("PKCS12");
-
-			InputStream keyStoreStream = new FileInputStream(filepathCert);
 			keyStore.load(keyStoreStream, passwordCert.toCharArray());
 
 			KeyManagerFactory kmf;
