@@ -33,9 +33,9 @@ public class MoodleProcess {
 	public void executeProcessJnext() {
 		try {
 			LocalDate yesterday = LocalDate.now().minusDays(1);
+			logger.info("iniciando el proceso con idEmpresa {} y fechaIngreso {}...", ID_EMPRESA_SANATORIO, yesterday);
 
 			List<UserData> newUsers = getNewUsersJnextByIdEmpresa(ID_EMPRESA_SANATORIO, yesterday);
-
 			logger.info("Cantidad de usuarios a procesar  {} ", newUsers.size());
 
 			if (!newUsers.isEmpty())
@@ -61,7 +61,7 @@ public class MoodleProcess {
 
 		List<LegajoData> legajos = null;
 		List<UserData> newUsers = new ArrayList<>();
-		logger.info("consultando legajos en jnext con idEmpresa {} y ingresoIngreso {}", idEmpresa, fechaIngreso);
+		logger.info("consultando legajos en jnext con idEmpresa {} y fechaIngreso {}", idEmpresa, fechaIngreso);
 		try {
 			legajos = jnextClient.getLegajosWithcertificateIS(idEmpresa);
 

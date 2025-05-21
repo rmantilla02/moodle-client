@@ -1,6 +1,7 @@
 package ar.com.moodle.exception;
 
 public class ExternalApiException extends Exception {
+
 	/**
 	 * 
 	 */
