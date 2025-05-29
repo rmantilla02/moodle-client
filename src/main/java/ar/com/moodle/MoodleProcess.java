@@ -2,6 +2,7 @@ package ar.com.moodle;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -26,20 +27,26 @@ import ar.com.moodle.parser.DateUtils;
 public class MoodleProcess {
 
 	private static final Logger logger = LogManager.getLogger(MoodleProcess.class);
-	private static final int ID_EMPRESA_SANATORIO = 6201;
 
 	// Se ejecuta todos los dias a las 10am
 	@Scheduled(cron = "0 0 10 * * ?")
 	public void executeProcessJnext() {
 		try {
 			LocalDate yesterday = LocalDate.now().minusDays(1);
-			logger.info("iniciando el proceso con idEmpresa {} y fechaIngreso {}...", ID_EMPRESA_SANATORIO, yesterday);
+			logger.info("iniciando el proceso con fechaIngreso {}...", yesterday);
 
-			List<UserData> newUsers = getNewUsersJnextByIdEmpresa(ID_EMPRESA_SANATORIO, yesterday);
-			logger.info("Cantidad de usuarios a procesar  {} ", newUsers.size());
+			String strEmpresas = Config.get("ids.empresas");
+			List<Integer> idsEmpresas = Arrays.stream(strEmpresas.split(",")).map(String::trim).map(Integer::valueOf).toList();
 
-			if (!newUsers.isEmpty())
-				this.procesarUsuarios(newUsers);
+			for (Integer idEmpresa : idsEmpresas) {
+				logger.info("procesando idEmpresa {}...", idEmpresa);
+
+				List<UserData> newUsers = getNewUsersJnextByIdEmpresa(idEmpresa, yesterday);
+				logger.info("Cantidad de usuarios a procesar  {}", newUsers.size());
+
+				if (!newUsers.isEmpty())
+					this.procesarUsuarios(newUsers);
+			}
 
 			logger.info("fin del proceso...");
 		} catch (ExternalApiException e) {
