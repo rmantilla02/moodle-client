@@ -31,13 +31,12 @@ public class MoodleClient {
 
 	public static void main(String[] args) {
 
-		try {
-			logger.info("Iniciando el proceso para dar de alta a los usuarios en la plataforma de Moodle...");
-
-			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MoodleClient.class);
-
+		logger.info("Iniciando el proceso para dar de alta a los usuarios en la plataforma de Moodle...");
+		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MoodleClient.class)) {
+			Thread.currentThread().join();
 		} catch (Exception e) {
 			logger.error("error al iniciar el proceso ", e);
 		}
 	}
+
 }

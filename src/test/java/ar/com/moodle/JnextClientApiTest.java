@@ -8,17 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import ar.com.moodle.client.JNextClientApi;
 import ar.com.moodle.client.impl.JNextClientApiImpl;
-import ar.com.moodle.config.Config;
 import ar.com.moodle.model.LegajoData;
 
-public class JnextClientApiTest {
-
-	@Test
-	void testGetGTLegajosByEmpresaId() throws Exception {
-		JNextClientApi client = new JNextClientApiImpl();
-		List<LegajoData> result = client.getLegajosWithCertificateGT(6201);
-		assertNotNull(result);
-	}
+class JnextClientApiTest {
 
 	@Test
 	void testGetLegajosCertificadoIS() throws Exception {
@@ -27,12 +19,6 @@ public class JnextClientApiTest {
 		List<LegajoData> result = null;
 		result = jnextClient.getLegajosWithcertificateIS(6201);
 		assertNotNull(result, "legajos null");
-	}
-
-	@Test
-	void testGetConfigValue() {
-		String token = Config.get("moodle.token");
-		assertNotNull(token, "resultado null");
 	}
 
 }

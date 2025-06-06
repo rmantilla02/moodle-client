@@ -16,14 +16,4 @@ class MoodleProcessTest {
 		}
 	}
 
-	@Test
-	void testExecuteProcessFromFile() {
-		try {
-			MoodleProcess process = new MoodleProcess();
-			process.executeProcessFromFile("users.file.path.test");
-		} catch (Exception e) {
-			assertNotNull(null);
-		}
-	}
-
 }

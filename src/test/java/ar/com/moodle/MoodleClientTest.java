@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import ar.com.moodle.client.MoodleClientApi;
@@ -13,7 +12,6 @@ import ar.com.moodle.config.Config;
 import ar.com.moodle.exception.ExternalApiException;
 import ar.com.moodle.model.CohortData;
 import ar.com.moodle.model.UserData;
-import ar.com.moodle.parser.CSVParser;
 
 class MoodleClientTest {
 
@@ -30,12 +28,12 @@ class MoodleClientTest {
 		user.setPassword(dni);
 		user.setFirstname("Roger");
 		user.setLastname("Prueba");
-		user.setEmail("RMANTILLA02@GMAIL.COM");
+		user.setEmail("RMANTILLA@sanatoriocolegiales.com.ar");
 		user.setDni(dni);
 		user.setLegajoId("163173");
 		user.setSectorJn(sectorJn);
 		user.setCentroDeCostos(centroDeCostos);
-		user.setPuesto("Tecnico/a");
+		user.setPuesto("Software Developer");
 
 		Integer result = client.createUser(user);
 		assertNotNull(result);
@@ -55,32 +53,6 @@ class MoodleClientTest {
 	}
 
 	@Test
-	void testParsearUsuarios() throws Exception {
-
-		List<UserData> result = null;
-		String path = Config.get("users.file.path.test");
-		result = CSVParser.parseUsers(path);
-
-		System.out.println("Cantidad de usuarios: " + result.size());
-
-		Assertions.assertNotNull(result, "resultado null");
-	}
-
-	@Test
-	void testCreateUsersFormFile() throws Exception {
-
-		MoodleClientApi moodleClient = new MoodleClientApiImpl();
-		List<UserData> users = null;
-		String path = Config.get("users.file.path.test");
-		users = CSVParser.parseUsers(path);
-		for (UserData user : users) {
-			moodleClient.createUser(user);
-		}
-
-		assertNotNull(users, "resultado null");
-	}
-
-	@Test
 	void testGetAllCohortes() throws ExternalApiException {
 		MoodleClientApi client = new MoodleClientApiImpl();
 
@@ -88,6 +60,12 @@ class MoodleClientTest {
 		result = client.getAllCohortes();
 
 		assertNotNull(result, "resultado null");
+	}
+
+	@Test
+	void testGetConfigValue() {
+		String token = Config.get("moodle.token");
+		assertNotNull(token, "resultado null");
 	}
 
 }

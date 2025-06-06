@@ -1,5 +1,6 @@
 package ar.com.moodle;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ import ar.com.moodle.exception.ParserUserException;
 import ar.com.moodle.model.CohortData;
 import ar.com.moodle.model.LegajoData;
 import ar.com.moodle.model.UserData;
-import ar.com.moodle.parser.CSVParser;
+import ar.com.moodle.parser.UserValidator;
 import ar.com.moodle.parser.DateUtils;
 
 @Component
@@ -36,7 +37,8 @@ public class MoodleProcess {
 			logger.info("iniciando el proceso con fechaIngreso {}...", yesterday);
 
 			String strEmpresas = Config.get("ids.empresas");
-			List<Integer> idsEmpresas = Arrays.stream(strEmpresas.split(",")).map(String::trim).map(Integer::valueOf).toList();
+			List<Integer> idsEmpresas = Arrays.stream(strEmpresas.split(",")).map(String::trim).map(Integer::valueOf)
+					.toList();
 
 			for (Integer idEmpresa : idsEmpresas) {
 				logger.info("procesando idEmpresa {}...", idEmpresa);
@@ -98,7 +100,7 @@ public class MoodleProcess {
 		for (UserData user : newUsers) {
 			try {
 				logger.info("procesando el usuario {}... ", user.getUsername());
-				CSVParser.validateUser(user);
+				UserValidator.validateUser(user);
 
 				CohortData cohortExist = getCohortIfExist(allCohorts, user.getSectorJn(), user.getCentroDeCostos());
 				if (cohortExist == null) { // crear cohort
@@ -131,9 +133,10 @@ public class MoodleProcess {
 	 * @return
 	 */
 	private static CohortData getCohortIfExist(List<CohortData> cohortes, String sectorJn, String centroDeCostos) {
-		CohortData result = cohortes.stream()
-				.filter(c -> c.getName().contains(sectorJn) && c.getName().contains(centroDeCostos)).findFirst()
-				.orElse(null);
+		CohortData result = cohortes.stream().filter(c -> {
+			String name = normalize(c.getName());
+			return name.contains(normalize(sectorJn)) && name.contains(normalize(centroDeCostos));
+		}).findFirst().orElse(null);
 
 		if (result != null) {
 			logger.info("existe cohort con id: {} , nombre {} ", result.getId(), result.getName());
@@ -141,22 +144,11 @@ public class MoodleProcess {
 		return result;
 	}
 
-	public void executeProcessFromFile(String confFilePath) {
-		try {
-			logger.info("Iniciando proceso para dar de alta a los usuarios en la plataforma de Moodle...");
-
-			String filePath = Config.get(confFilePath);
-			List<UserData> newUsers = CSVParser.parseUsers(filePath);
-
-			logger.info("Cantidad de usuarios a procesar: {}", newUsers.size());
-			procesarUsuarios(newUsers);
-
-			logger.info("fin del proceso...");
-		} catch (ExternalApiException e) {
-			logger.error("error al ejecutar el proceso para dar de alta los usuarios...", e);
-		} catch (Exception ex) {
-			logger.error("error inesperado al ejecutar el proceso para dar de alta los usuarios...", ex);
-		}
+	private static String normalize(String input) {
+		if (input == null)
+			return null;
+		String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+		return normalized.replaceAll("\\p{M}", "").toLowerCase();
 	}
 
 }

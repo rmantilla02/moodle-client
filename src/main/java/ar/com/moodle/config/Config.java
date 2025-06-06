@@ -7,6 +7,10 @@ public class Config {
 
 	private static final Properties props = new Properties();
 
+	private Config() {
+		throw new UnsupportedOperationException("Esta es una clase de utilidad y no puede ser instanciada");
+	}
+
 	static {
 		try (InputStream input = Config.class.getClassLoader().getResourceAsStream("config.properties")) {
 			if (input == null) {
