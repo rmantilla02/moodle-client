@@ -81,7 +81,7 @@ public class MoodleClientApiImpl implements MoodleClientApi {
 
 			String url = this.buildUrl(token, FUNCTION_CORE_COHORT_CREATE_COHORTS);
 
-			String body = this.buildCohortBody(sectorJn, centroDeCostos);
+			String body = this.buildCohortBody(sectorJn.toUpperCase(), centroDeCostos.toUpperCase());
 
 			HttpClient client = HttpClient.newHttpClient();
 

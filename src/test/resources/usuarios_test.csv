@@ -1,6 +1,0 @@
-username;password;firstname;lastname;email;dni;legajo_id;sector_jn;centro_de_costos;puesto
-1000001;11000001;ELENA GLADYS;PRUEBA;gladys.prueba2@vilella.com.ar;1000001;11;At. al PacientePrueba;OperacionesPrueba;ADMINISTRATIVO/A
-11000002;11000002;LILIAN BEATRIZ;PRUEBA;lilian.prueba@centromedicovilella.com.ar;11000002;13;CalidadPrueba;OperacionesPrueba;Analista
-11000003;11000003;MONICA MIRIAM;PRUEBA;monica.prueba@centromedicovilella.com.ar;11000003;37;At. al PacientePrueba;KinesiologiaPrueba;Recepcionista
-11000004;11000004;MARCELA ALEJANDRA;PRUEBA;marcela.prueba@centromedicovilella.com.ar;11000004;38;FacturacionPrueba;ContratacionesPrueba;Coordinar/a
-11000005;11000005;GRACIELA NOEMI;PRUEBA;graciela.prueba@vilella.com.ar;11000005;51;RX y MAMOGRAFIAPrueba;ImagenesPrueba;Tecnico/a
