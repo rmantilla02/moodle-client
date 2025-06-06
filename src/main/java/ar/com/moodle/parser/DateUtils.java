@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +11,10 @@ import org.apache.logging.log4j.Logger;
 public class DateUtils {
 
 	private static final Logger logger = LogManager.getLogger(DateUtils.class);
+
+	private DateUtils() {
+		throw new UnsupportedOperationException("Esta es una clase de utilidad y no puede ser instanciada");
+	}
 
 	public static LocalDateTime convertToDateTime(String date) {
 		LocalDateTime result = null;
@@ -25,13 +28,12 @@ public class DateUtils {
 	}
 
 	public static LocalDate convertToLocalDate(String date) {
-		return convertToDateTime(date).toLocalDate();
-	}
-
-	public static long daysBetween(LocalDate from, LocalDate to) {
-		if (from == null || to == null)
-			return 0;
-		return ChronoUnit.DAYS.between(from, to);
+		LocalDateTime localDate = convertToDateTime(date);
+		if (localDate != null) {
+			return localDate.toLocalDate();
+		} else {
+			throw new IllegalArgumentException("La fecha no pudo convertirse a LocalDate");
+		}
 	}
 
 }
